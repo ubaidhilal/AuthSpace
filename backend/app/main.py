@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from app.api.auth import router as auth_router
-from app.api.chat import router as chat_router
+from app.api.routes import router as chat_router
 from app.api.dependencies import get_current_user
 from app.core.config import settings
 from app.db.session import init_db
