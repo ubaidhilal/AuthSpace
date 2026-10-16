@@ -4,7 +4,7 @@ from functools import lru_cache
 from agents import Agent, HostedMCPTool
 from composio import Composio
 from app.schemas.chat import AssistantResponse
-from app.literals.system_prompts import SYSTEM_PROMPT_V2
+from app.literals.system_prompts import SYSTEM_PROMPT_V3
 from app.core.config import settings
 
 
@@ -50,7 +50,7 @@ def create_agent(user_id: str) -> Agent:
 
     return Agent(
         name="AuthSpaceAssistant",
-        instructions=SYSTEM_PROMPT_V2,
+        instructions=SYSTEM_PROMPT_V3,
         model=settings.model,
         tools=[mcp_tool],
         output_type=AssistantResponse,

@@ -118,16 +118,45 @@ function App() {
     textareaRef.current?.focus();
   };
 
-  const openConversation = async (item) => {
-    if (sending) abortRef.current?.abort();
-    setSending(false); setError("");
-    try {
-      const response = await fetch(`${API_BASE}/conversations/${item.id}`, { credentials: "include" });
-      if (!response.ok) throw new Error(await readError(response));
-      const data = await response.json();
-      setConversationId(data.id); setActiveTitle(data.title); setMessages(data.messages.map(({ role, content, id }) => ({ id, role, content, streaming: false })));
-    } catch (e) { setError(e.message || "Could not open conversation."); }
-  };
+
+const openConversation = async (item) => {
+  if (sending) abortRef.current?.abort();
+
+  setSending(false);
+  setError("");
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/conversations/${item.id}`,
+      { credentials: "include" }
+    );
+
+    if (!response.ok) {
+      throw new Error(await readError(response));
+    }
+
+    const data = await response.json();
+
+    setConversationId(data.id);
+    setActiveTitle(data.title);
+
+    setMessages(
+      data.messages.map((message) => ({
+        id: message.id,
+        role: message.role,
+        content: message.content,
+        streaming: false,
+
+        // Restore connection button data after refresh
+        connectNow: message.connect_now === true,
+        connection: message.connection ?? null,
+      }))
+    );
+  } catch (e) {
+    setError(e.message || "Could not open conversation.");
+  }
+};
+
 
   const deleteConversation = async (event, item) => {
     event.stopPropagation();

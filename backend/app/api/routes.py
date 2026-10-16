@@ -50,15 +50,17 @@ async def delete_conversation(conversation_id: str, user: User = Depends(get_cur
     return {
         "id": conversation.id,
         "title": conversation.title,
-        "messages": [
-            {
-                "id": message.id,
-                "role": message.role,
-                "content": message.content,
-                "created_at": message.created_at,
-            }
-            for message in messages
-        ],
+          "messages": [
+    {
+        "id": message.id,
+        "role": message.role,
+        "content": message.content,
+        "connect_now": message.connect_now,
+        "connection": message.connection,
+        "created_at": message.created_at,
+    }
+    for message in messages
+   ],
     }
     
 

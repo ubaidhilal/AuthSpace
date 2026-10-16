@@ -58,17 +58,20 @@ async def generate(request, db, conversation_id, user_id, question):
         connect_now = response_data.get("connect_now", False)
         connection = response_data.get("connection")
 
-        # Save only the user-facing message, not the JSON structure.
+       # Save the assistant message and its structured connection data.
         db.add(
-            Message(conversation_id=conversation_id,
-                role="assistant",
-                content=assistant_text))
+        Message(
+            conversation_id=conversation_id,
+            role="assistant",
+            content=assistant_text,
+            connect_now=connect_now,
+            connection=connection))
+    
         saved_conversation = await db.get(Conversation, conversation_id)
         if saved_conversation:
             saved_conversation.updated_at = datetime.now(timezone.utc)
-
         await db.commit()
-
+        
         # Send the user-facing message to the frontend.
         yield sse("token",{"delta": assistant_text})
 
